@@ -12,15 +12,15 @@ changecom(`%')
  %                                                                           %
  %       Copyright (C) 1991-1998  Daniel Sleator and Davy Temperley          %
  %       Copyright (c) 2003  Peter Szolovits and MIT.                        %
- %       Copyright (c) 2008-2014  Linas Vepstas                              %
+ %       Copyright (c) 2008-2020  Linas Vepstas                              %
  %       Copyright (c) 2013  Lian Ruiting                                    %
  %                                                                           %
  %  See file "README" for information about commercial use of this system    %
  %                                                                           %
  %***************************************************************************%
 
-% Dictionary version number is 5.8.0 (formatted as V5v8v0+)
-<dictionary-version-number>: V5v8v0+;
+% Dictionary version number is 5.8.1 (formatted as V5v8v1+)
+<dictionary-version-number>: V5v8v1+;
 <dictionary-locale>: EN4us+;
 
  % _ORGANIZATION OF THE DICTIONARY_
@@ -164,8 +164,9 @@ nonCAP.zzz: ZZZ-;
 
 % noun-main-e: used for proper names (named entities)
 % Os*e- is used to allow certain adjectival uses.
+% Os*e- & Sj+: subject of bare infinitive. "You should hear John sing"
 <noun-main-e>:
-  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or Os*e-
+  (Ss*s+ & <CLAUSE>) or SIs- or (Js- & {Mf+}) or (Os*e- & {Sg+ or Sj+})
   or <post-nominal-s>
   or <costly-null>;
 
@@ -1023,6 +1024,9 @@ indication.n inkling.n amount.n answer.n:
     or (GN+ & (DD- or [()]))
     or Us-);
 
+attestation.n:
+  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
+
 % consonant-only form of the above.
 report.n sign.n conclusion.n complaint.n position.n restriction.n
 notion.n remark.n proclamation.n reassurance.n saying.n possibility.n
@@ -1165,6 +1169,9 @@ vote.n bill.n:
     (GN+ & (DD- or [()])) or
     ({NM+} & Ss+ & Wd-))) or
   AN+;
+
+propension.n:
+  (<noun-modifiers> & ((Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
 
 % <noun-rel-uto>: somewhat like <noun-rel-s> but with more stuff.
 % {Jd-}: "a large amount of effort"
@@ -1374,19 +1381,25 @@ times.n:
 she he:
   {[[R+ & Bs+]]} & (({MXs+} & Ss+ & <CLAUSE>) or SIs- or dSJls+);
 
+% subject of bare infinitive:
+% "You should hear him sing" -- sing is the bare infinitive,
+% and "him" is the "subject" of that infinitive...
+<bare-inf>: (J- or Ox-) & {Sg+ or Sj+};
+
 % The E- is for "It's either us or them" ... not ideal, but OK
 % See also me.p below.
 me him:
-  J- or Ox- or ({[[E-]]} & dSJl+) or dSJr- or Wa-;
+  <bare-inf> or ({[[E-]]} & dSJl+) or dSJr- or Wa-;
 
 % DD+: "... how us two should work together"
 us:
-  J- or Ox- or ({[[E-]]} & dSJl+) or dSJr- or DD+;
+  <bare-inf> or ({[[E-]]} & dSJl+) or dSJr- or DD+;
 
 % Jd- & Dmc-: "I have a lot of them" and J- is cost so that this comes first.
 % (Jd- & Dmc- & Sp+):  "Many of them could be saved"
+% Why is there a cost on <bare-inf> ???
 them:
-  [J-]
+  [<bare-inf>]0.5
   or ({Jd- & Dmc-} & Ox-)
   or (Jd- & Dmc- & {Wd-} & Sp+)
   or ({[[E-]]} & dSJl+)
@@ -1396,9 +1409,9 @@ them:
 %    The Ox is needed for post-processing
 myself yourself himself herself itself themselves
 ourselves yourselves thyself oneself one's one’s:
-  J- or Ox- or E+ or MVa-;
+  <bare-inf> or E+ or MVa-;
 
-each_other: J- or O- or YS+;
+each_other: ((J- or O-) & {Sg+ or Sj+}) or YS+;
 
 his:
   DP+
@@ -1408,7 +1421,7 @@ his:
 
 % J-: "... with her"
 her:
-  J- or Ox-
+  <bare-inf>
   or DP+
   or ({AL-} & {@L+} & (D+ or DD+))
   or Wa-;
@@ -1439,7 +1452,7 @@ me.p:
 % Wa-: "You!"
 % Ds+: "you asshole!"
 you:
-  Wa-  or J- or Ox-
+  Wa- or <bare-inf>
   or (Sp+ & <CLAUSE>)
   or SIp-
   or dSJlp+
@@ -1455,7 +1468,7 @@ y'all: (Sp+ & <CLAUSE>) or SIp-;
 % youse yous yis ye: second-person plural -- Irish English --
 % https://en.wikipedia.org/wiki/Irish_English
 youse yous yis ye ya yo:
-  J- or Ox- or (Sp+ & <CLAUSE>) or SIp-
+  <bare-inf> or (Sp+ & <CLAUSE>) or SIp-
   or (<CLAUSE> & Pg+);
 
 % (Jd- & Dmu- & Sp+):  "much of it could be saved"
@@ -1468,7 +1481,7 @@ youse yous yis ye ya yo:
 % XXX FIXME: why does [J-] have a cost???
 it:
    [J-]0.5
-   or (Osm- & {@M+})
+   or (Osm- & ({@M+} or {Sg+ or Sj+}))
    or (Jd- & Dmu- & Os-)
    or (Jd- & Dmu- & {Wd-} & S+)
    or ({MX+} & (Ss+ or SFsi+) & <CLAUSE>)
@@ -1503,7 +1516,7 @@ I.p:
   or dSJl+
   or SXI-;
 
-them_all us_all you_all: Ox- or J-;
+them_all us_all you_all: <bare-inf>;
 % it_all gets a cost when used as direct object (Ox) to avoid
 % inappropriate parse "Please paint it all white"
 it_all: [[Ox-]] or J-;
@@ -2476,6 +2489,7 @@ per "/.per": Us+ & Mp-;
 %
 % <verb-pp>: PP- & WV-: "I have seen it".
 % <verb-pg>: Pg- is naked, no verb-wall: "I like eating bass."
+% <verb-pg>: Sg- & Pg-: "I feel him breathing down my back"
 %
 % XXX FIXME: for certain transitive verbs, we really want verb-ico to be
 % in the form (I- & B- & <verb-wall>)  for example: "that I did not know".
@@ -2484,7 +2498,7 @@ per "/.per": Us+ & Mp-;
 <verb-pl>:   {@E-} & ((Sp- & {hPFt-} & <verb-wall>) or (RS- & Bp-));
 <verb-sp>:   {@E-} & ((S- & {hPFt-} & <verb-wall>) or (RS- & B-));
 <verb-pp>:   {@E-} & PP- & {<verb-wall>};
-<verb-pg>:   {@E-} & (Pg- or Mg-);
+<verb-pg>:   {@E-} & (({[Sg-]-0.2} & Pg-) or Mg-);
 <verb-sp,pp>: <verb-sp> or <verb-pp>;
 
 % Pv- & OFj+: "knowledge was gained of the activities"
@@ -2534,10 +2548,16 @@ per "/.per": Us+ & Mp-;
 %       I'm confused, examples are needed... verb-pl,i is used everywhere...
 %       I want the wall, e.g. for "Did you see in which room?"
 %       which uses subject inversion and "did see" for the infinitive.
+% Qa- & <verb-wall>: Why-action questions: "why go there?"
 <verb-i>:    {@E-} & I- & (<verb-wall> or VJrpi-);
 <verb-co>:   {@E-} & {Xd- & (EI- or S**i-)} & Wi-;
 <verb-sic>:  {@E-} & Wi- & Xc+ & SI*i+ & {Xc+};
+<verb-why>:  Qa- & <verb-wall>;
+
+% Sj- & I*j-: subject of bare infinitive: "you should hear him talk!"
 <verb-ico>:  {@E-} & ((I- & (<verb-wall> or VJrpi- or [()])) or
+                      (Sj- & I*j-) or
+                      <verb-why> or
                       ({(Xd- & (EI- or S**i-)) or [{Xd-} & hCO-]} & Wi- & {NM+}) or
                       (Wi- & Xc+ & SI*i+ & {Xc+})
                      ) & {@E-};
@@ -2624,7 +2644,9 @@ per "/.per": Us+ & Mp-;
 % These are the verb-form expressions for special verbs that can take
 % filler-"it" as a subject.
 
-<verb-s-pl,i>: {@E-} & (((Sp- or If-) & <verb-wall>) or (RS- & Bp-) or <verb-co>);
+<verb-s-pl,i>:
+  {@E-} & (((Sp- or If-) & <verb-wall>)
+     or (RS- & Bp-) or <verb-co> or <verb-why>);
 <verb-s-s>: {@E-} & (((Ss- or SFsi-) & <verb-wall>) or (RS- & Bs-));
 <verb-s-sp,pp>: {@E-} & (((S- or SFsi- or PPf-) & <verb-wall>) or (RS- & B-));
 <verb-s-sp>: {@E-} & (((S- or SFsi-) & <verb-wall>) or (RS- & B-));
@@ -2830,6 +2852,7 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 %            "Are you really going to do it to them?"
 % VJrpi-: "I aim to help and also to do something"
 % SIp+ & N+: "Do you not want to know?"
+% naked SIp+: "do you?"
 % Wi- & I*d+ & Xc+ & SI*i+: "please do tell, John"; comma is required!
 %
 % Things we'd like to have, but can't:
@@ -2841,10 +2864,11 @@ define(`VERB_S_SPPP',`'VERB_x_T(``<verb-s-sp,pp>'',$1))
 % Hey, wait: using R & B here is wrong, should have Qe maybe?
 %
 do.v:
-  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co>) & <vc-do>)
+  ({@E-} & (Sp- or SFp- or (RS- & Bp-) or <verb-co> or <verb-why>) & <vc-do>)
   or (<verb-and-sp-i-> & ([<vc-do>] or ()))
   or (<vc-do> & <verb-and-sp-i+>)
-  or ((SIp+ or SFIp+) & {N+} & ((<verb-rq-aux> & {N+} & I*d+) or CQ-))
+  or ((SIp+ or SFIp+) & {N+} &
+     ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-))
   or (<verb-co> & {I*d+} & Xc+ & SI*i+ & {Xc+})
   or ({@E-} & I*t- & O+ & IV- & <mv-coord>)
   or ({@E-} & I- &
@@ -2858,7 +2882,7 @@ do.v:
 does.v:
   VERB_X_S(<vc-do>)
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
-  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & {N+} & I*d+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-));
 
 % Ss- & <verb-wall> & @MV+: "he did as he pleased."
 % <verb-x-sp> & <verb-wall>: "I sure wish I did"
@@ -2867,7 +2891,7 @@ did.v-d:
   or (<verb-x-sp> & <verb-wall>)
   or ({@E-} & Ss- & <verb-wall> & <mv-coord>)
   or (<verb-and-sp-i-> & <vc-do>) or (<vc-do> & <verb-and-sp-i+>)
-  or ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & I*d+) or CQ-));
+  or ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & {I*d+ or <verb-wall>}) or CQ-));
 %
 % XXX why not <vc-do> here ?
 % <verb-pv-b>: "I want it done." "I want the job done"
@@ -2899,13 +2923,14 @@ better.i fine.i ok.i okay.i OK.i poorly.i well.i: {EE-} & Vd-;
 % Wi-: "Don't!"
 % EI- & Wi-: "In total, don't!"
 % Wi- & I*d+: "Don't do that!"
+% SIp+: "don't you?" "why don't you?"
 don't don’t:
-  (((<verb-rq-aux> & (SIp+ or SFIp+) & I*d+)
+  (((<verb-rq-aux> & (SIp+ or SFIp+) & (I*d+ or <verb-wall>))
     or ({@E-} & (Sp- or SFp- or (RS- & Bp-)))) & (I*d+ or <verb-wall> or [[()]]))
   or (<verb-co> & {I*d+});
 
 doesn't doesn’t:
-  ((<verb-rq-aux> & (SIs+ or SFIs+) & I*d+) or <verb-x-s>)
+  ((<verb-rq-aux> & (SIs+ or SFIs+) & (I*d+ or <verb-wall>)) or <verb-x-s>)
      & (I*d+ or <verb-wall> or [[()]]);
 
 didn't.v-d didn’t.v-d:
@@ -2914,7 +2939,7 @@ didn't.v-d didn’t.v-d:
 
 daren't mayn't shan't oughtn't mightn't
 daren’t mayn’t shan’t oughtn’t mightn’t:
-  ({{EI-} & Q- & <verb-wall>} & (SI+ or SFI+) & I+) or
+  ({{EI-} & Q- & <verb-wall>} & (SI+ or SFI+) & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]]));
 
 % Cost on {[[MV+]]}: prefer to have prep modifiers modify something else:
@@ -2949,7 +2974,7 @@ have.v:
 
 has.v:
   VERB_X_S(<vc-have>)
-  or ((SIs+ or SFIs+) & ((<verb-rq> & PP+) or CQ-));
+  or ((SIs+ or SFIs+) & ((<verb-rq> & {PP+ or <verb-wall>}) or CQ-));
 
 % <verb-x-sp> & <verb-wall>: "I sure wish I had"
 % Sa*a- & PPf+: "as had been agreed, the work began on Monday"
@@ -3031,7 +3056,7 @@ rest.w: Ix- & Pv+;
 % Pa+ & {<verb-wall>}: the wall is optional: "A player who is injured
 %     must leave the field" cannot take a wall.
 % [Pa+]0.05: prefer gerund over adjective.
-% [I*v+].2: the cost should maybe be evenn higher, to avoid linking
+% [I*v+].5: the cost should maybe be even higher, to avoid linking
 %     past-tense 'were' to infinitives. "The rooms were let."
 % PFb- & <verb-wall> & Pa+: "cheaper than direct, slime is greener."
 
@@ -3050,7 +3075,7 @@ rest.w: Ix- & Pv+;
     or <to-verb>
     or (PFb- & <verb-wall> & {Pa+})
     or ({MV+} & [Pa+]0.05 & {<verb-wall>})))
-  or ({N+} & ((AF- & <verb-wall>) or ({MV+} & [Pv+].1) or [I*v+].2))
+  or ({N+} & ((AF- & <verb-wall>) or ({MV+} & [Pv+].1) or [I*v+].5))
   or (({N+} or {Pp+}) & Pg*b+ & <verb-wall>);
 
 % Identical to above, but no wall.  This is used only in "and.j-v"
@@ -3212,7 +3237,7 @@ am.v:
 % Ix- & <verb-wall>: "He is as smart as I expected him to be."
 % Ix- & <vc-be>: "I'm sure he'll still be popular."
 be.v:
-  ({@E-} & ((<verb-co> & <verb-wall>) or [S*x-]) & <vc-be>)
+  ({@E-} & ((<verb-co> & <verb-wall>) or <verb-why> or [S*x-]) & <vc-be>)
   or ({@E-} & Ix- & <verb-wall>)
   or ({@E-} & Ix- & <vc-be>)
   or (<verb-and-sp-i-> & ([<vc-be-and>] or ()))
@@ -3263,7 +3288,7 @@ weren't.v-d weren’t.v-d:
 % Sa*a- & Ix+: "..., as shall be proven"
 % SI+ & N+ & I+: "how long will you not have mercy?"
 will.v can.v may.v must.v could.v might.v shall.v shalt.v:
-  ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & I+) or CQ-))
+  ((SI+ or SFI+) & ((<verb-rq-aux> & {N+} & (I+ or <verb-wall>)) or CQ-))
   or ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]]))
   or (Sa*a- & Ix+)
   or (<verb-and-sp-> & {N+} & {@E-} & I+)
@@ -3278,10 +3303,13 @@ could.v-d:
 
 % <verb-wall>: "You know you should."
 should.v:
-  ((SI+ or SFI+) & ((<verb-rq-aux> & I+) or CQ-)) or
+  ((SI+ or SFI+) & ((<verb-rq-aux> & (I+ or <verb-wall>)) or CQ-)) or
   ({N+} & <verb-x-sp> & (I+ or (CX- & <mv-coord>) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & I+) or (I+ & <verb-and-sp+>) or
   [[(SI*j+ or SFI**j+) & I+ & ((Xd- & VCq- & Xc+) or VCq- or ({{Xd-} & Xc+} & dCOp+))]];
+
+% idiomatic: "You had better give back that telephone!"
+had_better: S- & I+;
 
 % <verb-wall>: "I sure wish he would."
 would.v:
@@ -3292,21 +3320,23 @@ would.v:
 % TO+: "I ought to."
 ought.v:
   ((<verb-rq> & (SI+ or SFI+)) or <verb-x-sp> or <verb-and-sp->)
-    & (<to-verb> or (N+ & I+) or TO+)
+    & {<to-verb> or (N+ & I+) or TO+}
     & <verb-wall>;
 
 % <verb-wall>: "I know I won't."
+% SI+ & <verb-wall>: "why couldn't he?"
 won't can't mustn't couldn't shouldn't cannot needn't
 won’t can’t mustn’t couldn’t shouldn’t needn’t:
-  (<verb-rq-aux> & (SI+ or SFI+) & I+) or
+  (<verb-rq-aux> & (SI+ or SFI+) & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (I+ or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & I+) or
   ({@E-} & I+ & <verb-and-sp+>) or
   Wa-;
 
 % <verb-wall>: "I know I wouldn't."
+% SI+ & <verb-wall>: "why wouldn't he?"
 wouldn't wouldn’t:
-  (<verb-rq-aux> & (SI+ or SFI+) & {RT+} & I+) or
+  (<verb-rq-aux> & (SI+ or SFI+) & {RT+} & (I+ or <verb-wall>)) or
   (<verb-x-sp> & (({RT+} & I+) or <verb-wall> or [[()]])) or
   (<verb-and-sp-> & {@E-} & (({RT+} & I+) or [[()]])) or
   ({@E-} & (({RT+} & I+) or [[()]]) & <verb-and-sp+>);
@@ -3472,10 +3502,35 @@ lain.v: VERB_PP(<vc-bulge>);
   <verb-ge-d>;
 
 % --------------------------------------------------------------
-
 % irregular
+
+<vc-listen>: {K+} & <mv-coord>;
+
+% <verb-focus>: commands/requests to focus attention on action.
+%               The action is a bare infinitive, thus I*j+.
+% I- & MVp+ & I*j+: "go listen to them play music"
+% Wi- & MVp+ & I*j+: "Just listen to them talk like that!"
+<verb-focus>:
+  {@E-} & (I- or Wi-) & {<verb-wall>} & MVp+ & I*j+;
+listen.v:
+  VERB_PLI(<vc-listen>)
+  or <verb-focus>;
+
+listens.v: VERB_S_I(<vc-listen>) or <verb-si>;
+listened.v-d:
+  VERB_SPPP_I(<vc-listen>)
+  or <verb-adj>
+  or <verb-si>;
+
+listening.v:
+  (<vc-listen> & <verb-pg,ge>) or
+  <verb-adj> or
+  <verb-ge-d>;
+
+
+% I*g: "Come walk with me".
 <vc-come>:
-  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or <b-minus> or QI+} & <mv-coord>)
+  ({(K+ & {Pa+}) or Pv+ or [[Pg+]] or I*g+ or <b-minus> or QI+} & <mv-coord>)
   or ({@MV+} & Pa+);
 come.v:
   VERB_PLI(<vc-come>)
@@ -3797,7 +3852,8 @@ running.g beating.g catching.g driving.g striking.g:
 /en/words/words-medical.v.4.2: VERB_S_T(<vc-trans>);
 
 % <verb-manner> is too broad for most of these, but is OK for many.
-% <verb-manner> is part of <word-adj>
+% <verb-manner> is part of <verb-adj>
+% I'm not sure I like Pa in verb-adj but there it is and widely used ...
 /en/words/words.v.4.3:
   VERB_SPPP_T(<vc-trans>)
   or (<verb-pv> & {{Xc+} & Pa+})
@@ -4365,11 +4421,12 @@ reigning.v ruling.w: (<vc-reign> & <verb-pg,ge>) or <verb-ge-d>;
 % K+ connects to particles.
 % [Pa+]0.1: prefer MVa to Pa whenever possible: "She look right"
 % [K+]0.2: prefer Pa+ to K+ whenever possible: "She looked up"
+% <verb-focus>: "Just look at him smile!"
 <vc-look>: {({@MV+} & (LI+ or [{Xc+} & Pa+]0.1))
   or ({[K+]0.2 or AF-} & <mv-coord>)
   or (O+ & K+ & <mv-coord>)
   or (O+ & MV+ & <mv-coord>)};
-look.v: VERB_PLI(<vc-look>);
+look.v: VERB_PLI(<vc-look>) or <verb-focus>;
 looks.v: VERB_S_T(<vc-look>);
 looked.v-d: VERB_SPPP_T(<vc-look>);
 looking.v: (<vc-look> & <verb-pg,ge>) or <verb-ge-d>;
@@ -5088,10 +5145,17 @@ requesting.v: <verb-pg> & <vc-request>;
 
 % XXX why is there a cost on Pv ??
 <vc-feel>: <vc-trans> or
-  ({@MV+} & (Pa+ or TH+ or <embed-verb> or RSe+ or AF- or Vf+ or (LI+ or <mv-coord>) or [Pv+]));
+  ({@MV+} &
+    (Pa+ or TH+ or <embed-verb> or
+    RSe+ or AF- or Vf+ or
+    LI+ or <mv-coord> or [Pv+] or
+    (O+ & (I*j+ or Pg+))));
 feel.v: VERB_PLI(<vc-feel>);
 feels.v: VERB_S_T(<vc-feel>);
-felt.v-d: VERB_SPPP_T(<vc-feel>) or (<verb-s-pv> & {THi+}) or <verb-phrase-opener>;
+felt.v-d:
+  VERB_SPPP_T(<vc-feel>)
+  or (<verb-s-pv> & {THi+})
+  or <verb-phrase-opener>;
 feeling.g: (<vc-feel> & <verb-ge>) or <verb-ge-d>;
 feeling.v: <verb-pg> & <vc-feel>;
 
@@ -5572,7 +5636,13 @@ refusing.v: <verb-pg> & <vc-refuse>;
   ([[@MV+ & O*n+]]) or
   [[CX- & <mv-coord>]];
 
-want.v need.v: VERB_PLI(<vc-want>);
+want.v:
+  VERB_PLI(<vc-want>);
+
+% SI+ & <verb-rq-aux> & I+: "Need you use so much flour?"
+need.v:
+  VERB_PLI(<vc-want>)
+  or ((SI+ or SFI+) & <verb-rq-aux> & I+);
 need.i need'st: {@E-} & ((S- & <verb-wall>) or (RS- & B-)) & (N+ & I+);
 wants.v needs.v: VERB_S_T(<vc-want>) or <vc-please>;
 wanted.v-d needed.v-d:
@@ -6520,7 +6590,7 @@ betting.v: <verb-pg> & <vc-bet>;
   ((O+ or <b-minus>) & <mv-coord> & {THi+}) or
   ([[@MV+ & O*n+ & <mv-coord>]]);
 
-bother.v: VERB_S_PLI(<vc-bother>);
+bother.v: VERB_S_PLI(<vc-bother>) or <verb-why>;
 bothers.v: VERB_S_S(<vc-bother>);
 bothered.v-d: VERB_S_SPPP(<vc-bother>) or <verb-pv> or <verb-phrase-opener>;
 bothering.v: <verb-s-pg> & <vc-bother>;
@@ -6750,18 +6820,21 @@ ending_up: (<vc-end-up> & <verb-pg,ge>) or <verb-ge-d>;
 
 % -----------------------------------------------------------------
 % wall connectors
+% The naked Wa+: affirmative replies: "a red car"
 % The naked Wb+, without a WV+, links to topic questions: "what did you think?".
 % The naked Wi+, without a WV+, links to imperatives: "put it on the table".
+% The naked Wl+: locative expreessions: "on the table"
 % The naked Wn+, without a WV+, links to nominals: "what a shame!".
 % The naked Wx+, without a WV+, links to opinions: "ruined!".
 % The naked Qd+, without a WV+, links to subj-verb-inverts: "are you
 %     insane?", "Are you the one?"
 % The Qd+ with a WV+, for questions: "did you do that?"
+% Wv+ with a wall: why-verb questions: "whey even go there?"
 %
 % XXX everywhere where Ws+ is used, should probably be <wi-wall>!?
 <wo-wall>: hWa+ or hWb+ or hWi+ or hWn+ or hWw+ or hWx+ or hQd+;
 <wi-wall>: (hWd+ or hWp+ or hWr+ or hWq+ or hWs+ or hWj+ or hWc+ or hWe+
-or hWt+ or hWo+ or hQd+) & <WALL>;
+   or hWt+ or hWo+ or hWv+ or hQd+) & <WALL>;
 
 % Paraphrasing, quotational complements:
 <paraph-null>: [()]0.1;
@@ -7687,6 +7760,12 @@ night.r semester.r term.r season.r session.r:
 the_next the_previous the_following this_past:
   DTn+;
 
+% Strange -- the JT- is a time-expression link .. .is that right here ??
+% I'm not convince any of this is correct...
+articulo_mortis intra_vitam in_articulo_mortis in_extremis
+ post_cibum post_coitum:
+ <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
+
 % Js- links "show results from today"
 <relative-date>:
   <prep-main-t> or JT- or Js- or YS+ or [[<noun-main-s>]];
@@ -8106,9 +8185,11 @@ when:
 % QI- & (): "I do not know why"
 % COa+: "Why, of course it will!"
 % N+: "why not?"  "Why the hell not?"
+% Wv- & Qa+: "why go there?"
 why:
   {EL+} & (
     ({hCO-} & {EW-} & (Ww- or Wq-) & {Qw+ or N+})
+    or (Wv- & Qa+)
     or (QI- & (<subcl-verb> or <ton-verb> or [()]0.5))
     or (<subcl-verb> & ((SFsx+ & <S-CLAUSE>) or WY- or BIq- or QJ+ or QJ-))
     or dCOa+
@@ -9612,6 +9693,11 @@ longer.a-c:
   ))
   or (DG- & (TR+ or AF+ or <subcl-verb>) & {@MV+} & (ER- or (Wd- & Xc+ & ER+)));
 
+longer-term.a:
+  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+)
+     or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})))
+   or (DG- & (TR+ or AF+) & {@MV+} & {<toi-verb> or THi+} & (ER- or (Wd- & Xc+ & ER+)));
+
 smarter.a-c nicer.a-c worse.a-c:
   ({ECa-} & (
     ((Pafm- or AFm+ or Mam- or ({EA-} & dAJrc-)) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})
@@ -9728,6 +9814,12 @@ best.a-s personal_best:
 
 % "despite best intentions"
 best.a:  A+;
+
+longest-term.a:
+  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-rel-x> & {<ton-verb>} & <noun-main-x>) or <adv-as>));
+
+oftenest correctliest soonest disquietingliest:
+ EA+;
 
 % ===========================================================================
 %ADVERBS
@@ -10740,6 +10832,7 @@ changequote dnl
 % Wc-: "But my efforts to win his heart have failed"
 % EB+: "would they have accepted this or, instead, would they have ..."
 but.ij and.ij or.ij not.ij also.ij then.ij but_not and_not and_yet:
+  <directive-opener> or
   [{Xd-} & (Xx- or Wc-) & {Xc+} & {EB+}
     & (Wdc+ or Qd+ or Ws+ or Wq+ or Ww+) & <WALL>]1.1;
 
@@ -11165,35 +11258,6 @@ UNLIMITED-CONNECTORS:
 
 % The YS, YP, PH and ZZZ connectors can never be longer than one.
 LENGTH-LIMIT-1: YS+ & YP+ & PH+ & ZZZ+;
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Extensions by Peter Szolovits, psz@mit.edu, as a part of the work for
-% "Adding a Medical Lexicon to an English Parser.  Proc. AMIA 2003 Annual
-% Symposium, xx-yy.
-% Visit http://www.medg.lcs.mit.edu/projects/text/ for more information.
-%
-
-oftenest correctliest soonest disquietingliest:
- EA+;
-
-propension.n:
-  (<noun-modifiers> & ((Ds- & {@M+} & {(<ton-verb> or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main-s> or Bsm+)) or Us- or (YS+ & Ds-) or (GN+ & (DD- or [()])))) or AN+;
-
-longest-term.a:
-  ({Xc+} & {NR-} & {[[@Ec-]]} & La-) or ({NR- or ND-} & DD- & ((<noun-rel-x> & {<ton-verb>} & <noun-main-x>) or <adv-as>));
-
-longer-term.a:
-  ({ECa-} & (({[[@Ec-]]} & {Xc+} & Am+)
-     or ((Pafm- or AFm+ or Mam-) & {@MV+} & {(<toi-verb> or THi+) & {LE+}})))
-   or (DG- & (TR+ or AF+) & {@MV+} & {<toi-verb> or THi+} & (ER- or (Wd- & Xc+ & ER+)));
-
-attestation.n:
-  (<noun-modifiers> & (({D*u-} & {@M+} & {(TH+ or (R+ & Bs+)) & {[[@M+]]}} & {@MXs+} & (<noun-main2-m> or (Ss*t+ & <CLAUSE>) or SIs*t- or Bsm+)) or Us- or (YS+ & {D*u-}) or (GN+ & (DD- or [()])))) or AN+;
-
-% Strange -- the JT- is a time-expression link .. .is that right here ??
-articulo_mortis intra_vitam in_articulo_mortis in_extremis
- post_cibum post_coitum:
- <prep-main-t> or JT- or [[E+]] or YS+ or [[<noun-main-s>]];
 
 % Handy test
 % grrr: (A- & B- & C+ & D+) or [(E- & @F+ & @G+ & H+)] or [[(I- & J- & @K- & @L+)]];

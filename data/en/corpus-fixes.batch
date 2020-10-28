@@ -1296,6 +1296,59 @@ then last week, I changed my mind
 % zero-subject/phantom-subject in sentence opener
 As mentioned before, we are creating a business service.
 
+% Serial verbs (come/go behaving like auxilliaries)
+I'll go get that
+I'll come listen to you
+Come listen to him
+come walk with me
+
+% Look-at, listen-to to focus and pay attention to an action-verb
+% Similar to "go watch them play ball" except its LOOK_AT, LISTEN_TO
+Come listen to him talk
+Come listen to him sing
+you should go listen to him talk
+Just listen to them talk like that!
+Just listen to them talk like that about you!
+go listen to them play music
+you should really listen to him talk
+
+look at him walk!
+look at him run
+look at him smile
+Just look at him smile!
+you should look at him smile
+come look at him try to hit the ball!
+come look at John try to hit the ball!
+
+% Like above, but simpler. Verify that
+% subect-of-bare-infinitive Sj link works.
+you should hear Mary talk
+you should hear it rain
+go watch them play music
+
+% Like aove, but Sg link to gerunds
+We saw him trying to escape
+I saw them digging a hole.
+
+She felt him breathe on her neck
+She felt him hover behind her
+she felt him poke at her leg
+I feel him breathing down my back
+I feel him really breathing down my back
+I feel him really breathing hard down my back
+She felt him really breathe on her neck
+She felt him really breathe hard on her neck
+
+
+% Avoid breakages due to above, via 4.0.knowledge
+*John is that Fred died
+
+% idiomatic verb constructions
+You had better give back that telephone!
+
+Need you use so much flour?
+Must you use so much flour?
+
 % Negations
 I have not been accustomed to such language as this
 I have not an instant to lose.
@@ -5182,6 +5235,83 @@ Who was that man?
 Who was that, man?
 Who were they?
 
+% action-verb questions
+Why bother?
+Why bother to do it?
+why trouble yourself to do it?
+why do it?
+why do you do it?
+why do you?
+do you?
+does he?
+oh, he does, does he?
+did she do it?
+did she?
+
+has she done it?
+has she?
+oh, he has, has he?
+
+why run away?
+why go now?
+why cry?
+why be lonely, when you could buy a potted plant?
+
+why don't you?
+don't you?
+don't you do it?
+don't you do it every day?
+didn't she?
+why didn't she?
+why didn't she do it?
+doesn't he?
+why doesn't he?
+why doesn't he do it?
+why couldn't he?
+why couldn't he do it?
+why wouldn't he?
+why wouldn't he do it?
+oh, he just would, wouldn't he?
+
+why aren't you?
+why wasn't she?
+why wasn't she asked?
+ain't you?
+isn't he?
+was she?
+won't she?
+can't she?
+didn't she?
+hasn't she?
+
+will he?
+will he do it?
+I asked, will he?
+why will he do it?
+why will he?
+I asked, why will he?
+
+could he?
+could he do it?
+how could he do it?
+how could he?
+
+mightn't she do it?
+mightn't she?
+why should he?
+should he do it?
+should he?
+
+of course he can, but should he?
+but should he?
+and will he?
+he said he will, so will he?
+
+He asked me: why go there?
+So why go there?
+I want to know, why go there?
+Seriously, why go there?
+
 % "to do" questions
 What is there to do?
 What are you going to do?
@@ -5194,6 +5324,11 @@ He is going to do it.
 He is going to not do it.
 *He is going to not do.
 That will do.
+
+% Short when questions
+When did Sue start using heroin?
+When did Sue start using?
+When did Joe?
 
 % Registers -- Newspaper headline declarations
 % Missing definite articles (with definite articles, these would parse)

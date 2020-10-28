@@ -407,3 +407,81 @@ const char *feature_enabled(const char * list, ...)
 
 	return NULL;
 }
+
+#ifdef _WIN32
+	#define DEBUG_TRAP (*((volatile int*) 0x0) = 42)
+#elif defined __GNUC__ || defined __clang_analyzer__
+	#define DEBUG_TRAP __builtin_trap()
+#else
+	#define DEBUG_TRAP abort()
+#endif
+
+/**
+ * Issue the assert() macro (see error.h) error message.
+ */
+void (* assert_failure_trap)(void);
+void assert_failure(const char cond_str[], const char func[],
+                    const char *src_location, const char *fmt, ...)
+{
+	va_list args;
+	const char sevfmt[] = "Fatal error: \nAssertion (%s) failed in %s() (%s): ";
+
+	fflush(stdout);
+	lg_error_flush();
+
+	va_start(args, fmt);
+	if ((lg_error.handler == default_error_handler) ||
+	    (lg_error.handler == NULL))
+	{
+		fprintf(stderr, sevfmt, cond_str, func, src_location);
+		vfprintf(stderr, fmt, args);
+		fprintf(stderr, "\n");                                                \
+		fflush(stderr);                                                       \
+	}
+	else
+	{
+		prt_error(sevfmt, cond_str, func, src_location);
+		verr_msg(NULL, lg_Fatal, fmt, args);
+		prt_error("\n");
+	}
+	va_end(args);
+
+	if (assert_failure_trap == NULL)
+		DEBUG_TRAP;  /* leave stack trace in debugger */                      \
+	else
+		assert_failure_trap();
+
+	exit(1);
+}
+
+/*
+ * Implement lgdebug() and verbosity_level() (see these macros and their
+ * comments in error.h).
+ */
+
+bool verbosity_check(int level, int v, char print_func , const char func[],
+                     const char file[], const char *filter)
+{
+	if ((((D_SPEC >= v) && (v >= level)) || (v == level)) &&
+	    ((level <= 1) || !((level <= D_USER_MAX) && (v > D_USER_MAX))) &&
+	    ((debug[0] == '\0') || feature_enabled(debug, func, file, filter, NULL)))
+	{
+		if (print_func == '+') err_msg(0, "%s: ", func);
+		return true;
+	}
+
+	return false;
+}
+
+void debug_msg(int level, int v, char print_func, const char func[],
+               const char file[], const char *fmt, ...)
+{
+	va_list args;
+
+	if (verbosity_check(level, v, print_func, func, file, ""))
+	{
+		va_start(args, fmt);
+		verr_msg(NULL, lg_Trace, fmt, args);
+		va_end(args);
+	}
+}

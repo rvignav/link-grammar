@@ -382,7 +382,7 @@ apply_contains_one_globally(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 	size_t i, j, count;
 	for (i = 0; i < sublinkage->num_links; i++)
 	{
-		assert(sublinkage->link_array[i].lw != SIZE_MAX);
+		assert(sublinkage->link_array[i].lw != SIZE_MAX, "Missing word in link");
 		if (post_process_match(rule->selector, sublinkage->link_array[i].link_name)) break;
 	}
 	if (i == sublinkage->num_links) return true;
@@ -391,7 +391,7 @@ apply_contains_one_globally(PP_data *pp_data, Linkage sublinkage, pp_rule *rule)
 	count = 0;
 	for (j = 0; j < sublinkage->num_links && count == 0; j++)
 	{
-		assert(sublinkage->link_array[j].lw != SIZE_MAX);
+		assert(sublinkage->link_array[j].lw != SIZE_MAX, "Missing word in link");
 		if (string_in_list(sublinkage->link_array[j].link_name, rule->link_array))
 		{
 			count = 1;
@@ -517,7 +517,7 @@ static void build_graph(Postprocessor *pp, Linkage sublinkage)
 
 	for (link = 0; link < sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link_array[link].lw != SIZE_MAX);
+		assert (sublinkage->link_array[link].lw != SIZE_MAX, "Missing word in link");
 		if (NULL == sublinkage->link_array[link].link_name) continue;
 		if (pp_linkset_match(pp->knowledge->ignore_these_links,
 		                     sublinkage->link_array[link].link_name))
@@ -692,8 +692,17 @@ static void left_depth_first_search(Postprocessor *pp, Linkage sublinkage,
 	}
 }
 
+/* domain_compare() is used to sort domains, and the code expects
+ * that a "stable sort" is used, i.e. that when two entries compare,
+ * the order is not changed. However, some OS distributions provide
+ * an unstable qsort(). To work around this, the below does an
+ * address compare to preserve order. I suppose this would break
+ * if the heap was ever upside-down (!?)
+ */
 static int domain_compare(const Domain * d1, const Domain * d2)
 {
+	if (d1->size == d2->size)
+		return (d1 > d2);
 	return (d1->size - d2->size); /* for sorting the domains by size */
 }
 
@@ -707,7 +716,7 @@ static void build_domains(Postprocessor *pp, Linkage sublinkage)
 
 	for (link = 0; link<sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link_array[link].lw != SIZE_MAX);
+		assert (sublinkage->link_array[link].lw != SIZE_MAX, "Missing word in link");
 		if (NULL == sublinkage->link_array[link].link_name) continue;
 		s = sublinkage->link_array[link].link_name;
 
@@ -805,7 +814,7 @@ static void build_domain_forest(PP_data *pp_data, Linkage sublinkage)
 
 	for (link=0; link < sublinkage->num_links; link++)
 	{
-		assert (sublinkage->link_array[link].lw != SIZE_MAX);
+		assert (sublinkage->link_array[link].lw != SIZE_MAX, "Missing word in link");
 		for (d=0; d<pp_data->N_domains; d++)
 		{
 			if (link_in_domain(link, &pp_data->domain_array[d]))
@@ -1007,7 +1016,7 @@ static void post_process_scan_linkage(Postprocessor *pp, Linkage linkage)
 	if (pp == NULL) return;
 	for (i = 0; i < linkage->num_links; i++)
 	{
-		assert(linkage->link_array[i].lw != SIZE_MAX);
+		assert(linkage->link_array[i].lw != SIZE_MAX, "Missing word in link");
 
 		pp_linkset_add(pp->set_of_links_of_sentence,
 			linkage->link_array[i].link_name);
